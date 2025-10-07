@@ -15,8 +15,11 @@ class Settings:
         self.debug: bool = self._get_variable("DEBUG", "False").lower() == "true"
         
         # Security Settings
-        self.allowed_hosts: list = self._get_variable("ALLOWED_HOSTS", "your-app-name.up.railway.app").split(",")
-        self.cors_origins: list = self._get_variable("CORS_ORIGINS", "").split(",")
+        allowed_hosts = self._get_variable("ALLOWED_HOSTS", "your-app-name.up.railway.app,localhost")
+        self.allowed_hosts = [host.strip() for host in allowed_hosts.split(",")]
+        
+        cors_origins = self._get_variable("CORS_ORIGINS", "")
+        self.cors_origins = [origin.strip() for origin in cors_origins.split(",")] if cors_origins else []
         
     def _get_required_variable(self, var_name: str) -> str:
         """Get required environment variable or raise error"""

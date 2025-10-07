@@ -1,5 +1,12 @@
-from fastapi import FastAPI, Depends, Request, HTTPException
-from fastapi.responses import HTMLResponse, JSONResponse
+# main.py (in root directory)
+import os
+import sys
+
+# Add the app directory to Python path
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
+from fastapi import FastAPI, Depends, Request
+from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.middleware.httpsredirect import HTTPSRedirectMiddleware
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
@@ -8,7 +15,7 @@ from sqlalchemy.orm import Session
 import logging
 
 from app.config import settings
-from app.database import db_manager, get_db, Base
+from app.database import db_manager, get_db
 from app.models import SurveyResponse
 from app.routes import survey, results
 
@@ -20,6 +27,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Create database tables
+from app.database import Base
 Base.metadata.create_all(bind=db_manager.engine)
 
 # Initialize FastAPI app
@@ -74,7 +82,7 @@ async def startup_event():
     
     # Test database connection
     if not db_manager.test_connection():
-        raise Exception("Failed to connect to database on startup")
+        logger.error("Failed to connect to database on startup")
 
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
@@ -104,10 +112,10 @@ async def health_check(db: Session = Depends(get_db)):
         }
     except Exception as e:
         logger.error(f"Health check failed: {e}")
-        return JSONResponse(
-            status_code=503,
-            content={"status": "unhealthy", "error": str(e)}
-        )
+        return {
+            "status": "unhealthy", 
+            "error": str(e)
+        }
 
 @app.get("/api/info")
 async def api_info():
@@ -118,12 +126,3 @@ async def api_info():
         "environment": settings.environment,
         "debug": settings.debug
     }
-
-# Error handlers
-@app.exception_handler(404)
-async def not_found_handler(request: Request, exc: HTTPException):
-    return templates.TemplateResponse("404.html", {"request": request}, status_code=404)
-
-@app.exception_handler(500)
-async def internal_error_handler(request: Request, exc: HTTPException):
-    return templates.TemplateResponse("500.html", {"request": request}, status_code=500)

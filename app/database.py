@@ -11,7 +11,6 @@ class DatabaseManager:
         self.database_url = self._prepare_database_url()
         self.engine = self._create_engine()
         self.SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=self.engine)
-        self.Base = declarative_base()
     
     def _prepare_database_url(self) -> str:
         """Prepare and validate database URL"""
@@ -61,4 +60,6 @@ class DatabaseManager:
 # Global database manager instance
 db_manager = DatabaseManager()
 get_db = db_manager.get_db
-Base = db_manager.Base
+
+# Base for models
+Base = declarative_base()
