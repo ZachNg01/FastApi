@@ -1,66 +1,56 @@
 from fastapi import FastAPI, Request, Form, Depends
 from fastapi.responses import HTMLResponse, RedirectResponse
-from fastapi.templating import Jinja2Templates
 from sqlalchemy import create_engine, Column, Integer, String, Text, DateTime, Boolean
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql import func
 import os
-from dotenv import load_dotenv
 
-load_dotenv()
+app = FastAPI(title="FIT5122 Unit Effectiveness Survey", version="1.0.0")
 
-# Database setup
+# Simple database setup - remove complex parsing
 DATABASE_URL = os.getenv("DATABASE_URL")
 
-# Fix connection string format
-if DATABASE_URL and DATABASE_URL.startswith("postgresql://"):
-    # Already correct format
-    pass
-elif DATABASE_URL and DATABASE_URL.startswith("psql '"):
-    # Extract the actual connection URL from the psql command
-    DATABASE_URL = DATABASE_URL.split("'")[1]
+# If DATABASE_URL is not set, use a simple fallback for testing
+if not DATABASE_URL:
+    print("⚠️ DATABASE_URL not set - using SQLite for local testing")
+    DATABASE_URL = "sqlite:///./test.db"
+else:
+    print(f"✅ Using DATABASE_URL: {DATABASE_URL[:50]}...")  # Log first 50 chars
 
-# Create engine with connection pooling
-engine = create_engine(
-    DATABASE_URL,
-    pool_pre_ping=True,
-    pool_recycle=300
-)
-
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-Base = declarative_base()
-
-class FIT5122SurveyResponse(Base):
-    __tablename__ = "fit5122_survey_responses"
-
-    id = Column(Integer, primary_key=True, index=True)
-    timestamp = Column(DateTime(timezone=True), server_default=func.now())
+try:
+    engine = create_engine(DATABASE_URL)
+    SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+    Base = declarative_base()
     
-    # Participation information
-    participated_fully = Column(Boolean, nullable=False)
-    lab_session = Column(String(100), nullable=True)
+    class FIT5122SurveyResponse(Base):
+        __tablename__ = "fit5122_survey_responses"
+        id = Column(Integer, primary_key=True, index=True)
+        timestamp = Column(DateTime(timezone=True), server_default=func.now())
+        participated_fully = Column(Boolean, nullable=False)
+        lab_session = Column(String(100), nullable=True)
+        unit_content_quality = Column(Integer, nullable=True)
+        teaching_effectiveness = Column(Integer, nullable=True)
+        assessment_fairness = Column(Integer, nullable=True)
+        learning_resources = Column(Integer, nullable=True)
+        overall_experience = Column(Integer, nullable=True)
+        positive_aspects = Column(Text, nullable=True)
+        improvement_suggestions = Column(Text, nullable=True)
+        technical_issues = Column(Text, nullable=True)
+        additional_comments = Column(Text, nullable=True)
+        consent_given = Column(Boolean, nullable=False, default=False)
     
-    # Unit effectiveness ratings (1-5 scale)
-    unit_content_quality = Column(Integer, nullable=True)
-    teaching_effectiveness = Column(Integer, nullable=True)
-    assessment_fairness = Column(Integer, nullable=True)
-    learning_resources = Column(Integer, nullable=True)
-    overall_experience = Column(Integer, nullable=True)
+    # Create tables
+    Base.metadata.create_all(bind=engine)
+    print("✅ Database tables created successfully")
     
-    # Detailed feedback
-    positive_aspects = Column(Text, nullable=True)
-    improvement_suggestions = Column(Text, nullable=True)
-    technical_issues = Column(Text, nullable=True)
-    
-    # Additional comments
-    additional_comments = Column(Text, nullable=True)
-    
-    # Consent and ethics
-    consent_given = Column(Boolean, nullable=False, default=False)
-
-# Create tables
-Base.metadata.create_all(bind=engine)
+except Exception as e:
+    print(f"❌ Database setup failed: {e}")
+    # Fallback to in-memory database
+    DATABASE_URL = "sqlite:///:memory:"
+    engine = create_engine(DATABASE_URL)
+    SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+    Base = declarative_base()
 
 def get_db():
     db = SessionLocal()
@@ -68,6 +58,7 @@ def get_db():
         yield db
     finally:
         db.close()
+
 
 app = FastAPI(title="FIT5122 Unit Effectiveness Survey", version="1.0.0")
 
