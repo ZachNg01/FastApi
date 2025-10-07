@@ -183,9 +183,9 @@ HTML_TEMPLATE = """
 
       <nav class="hidden md:flex space-x-8" id="nav-links">
         <a href="index.html">Home</a>
-        <a href="zach.html" class="active">About Me</a>
+        <a href="zach.html" >About Me</a>
         <a href="about.html">My Skillset</a>
-        <a href="skills.html">My Projects</a>
+        <a href="skills.html">My Projects class="active"</a>
         <a href="blog_main.html">My Updates</a>
       </nav>
       <button id="burger" class="md:hidden text-gray-200 focus:outline-none">
@@ -200,11 +200,11 @@ HTML_TEMPLATE = """
   <!-- Mobile Menu -->
   <div id="mobile-menu" class="hidden md:hidden fixed top-16 inset-x-0 z-40">
     <ul class="bg-gray-800 bg-opacity-90 backdrop-blur p-4 space-y-2 text-gray-200">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="zach.html">About Me</a></li>
-      <li><a href="about.html">My Skillset</a></li>
-      <li><a href="skills.html">My Projects</a></li>
-      <li><a href="blog_main.html">My Updates</a></li>
+      <li><a href="https://zachng01.github.io/Showcase/index.html">Home</a></li>
+      <li><a href="https://zachng01.github.io/Showcase/zach.html">About Me</a></li>
+      <li><a href="https://zachng01.github.io/Showcase/about.html">My Skillset</a></li>
+      <li><a href="https://zachng01.github.io/Showcase/skills.html">My Projects class="active"</a></li>
+      <li><a href="https://zachng01.github.io/Showcase/blog_main.html">My Updates</a></li>
 
     </ul>
   </div>
