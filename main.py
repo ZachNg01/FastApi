@@ -39,7 +39,7 @@ class FIT5122SurveyResponse(Base):
     
     # Participation information
     participated_fully = Column(Boolean, nullable=False)
-    lab_session = Column(String(50), nullable=True)
+    lab_session = Column(String(100), nullable=True)
     
     # Unit effectiveness ratings (1-5 scale)
     unit_content_quality = Column(Integer, nullable=True)
@@ -70,7 +70,29 @@ def get_db():
         db.close()
 
 app = FastAPI(title="FIT5122 Unit Effectiveness Survey", version="1.0.0")
-templates = Jinja2Templates(directory="templates")
+
+# All FIT5122 Lab Sessions
+LAB_SESSIONS = [
+    "01_OnCampus-P2 - Wed 12:00 (Group 17) - CL_Exh-20.Woodside_G05",
+    "02_OnCampus-P2 - Wed 12:00 (Group 19) - CL_Exh-20.Woodside_G06",
+    "03_OnCampus-P2 - Wed 12:00 (Group 17) - CL_Exh-20.Woodside_G15",
+    "04_OnCampus-P2 - Wed 12:00 (Group 19) - CL_Exh-20.Woodside_G16",
+    "05_OnCampus-P2 - Wed 12:00 (Group 21) - CL_Exh-20.Woodside_106",
+    "06_OnCampus-P2 - Wed 12:00 (Group 20) - CL_Exh-20.Woodside_107",
+    "07_OnCampus-P2 - Wed 14:00 (Group 15) - CL_Exh-20.Woodside_G05",
+    "08_OnCampus-P2 - Wed 14:00 (Group 16) - CL_Exh-20.Woodside_G06",
+    "09_OnCampus-P2 - Wed 14:00 (Group 11) - CL_Exh-20.Woodside_G15",
+    "10_OnCampus-P2 - Wed 14:00 (Group 16) - CL_Exh-20.Woodside_G16",
+    "11_OnCampus-P2 - Wed 14:00 (Group 18) - CL_Exh-20.Woodside_106",
+    "12_OnCampus-P2 - Wed 14:00 (Group 15) - CL_Exh-20.Woodside_107",
+    "13_OnCampus-P2 - Wed 19:00 (Group 21) - CL_Exh-20.Woodside_G05",
+    "14_OnCampus-P2 - Wed 19:00 (Group 19) - CL_Exh-20.Woodside_G06",
+    "15_OnCampus-P2 - Wed 12:00 (Group 20) - CL_Exh-20.Woodside_G04",
+    "16_OnCampus-P2 - Wed 14:00 (Group 12) - CL_Exh-20.Woodside_G04",
+    "17_OnCampus-P2 - Wed 19:00 (Group 23) - CL_Exh-20.Woodside_G04",
+    "Online/Recorded Session - Flexible timing",
+    "Did not attend any lab sessions"
+]
 
 HTML_TEMPLATE = """
 <!DOCTYPE html>
@@ -199,7 +221,7 @@ HTML_TEMPLATE = """
       </div>
       
       <p class="text-lg text-gray-600 mb-6">
-        Monash University Faculty of Information Technology
+        Industry Experience Studio Project - Monash University Faculty of Information Technology
       </p>
 
       <div class="ethics-notice">
@@ -278,7 +300,10 @@ async def home():
 
 @app.get("/survey", response_class=HTMLResponse)
 async def survey_form(request: Request):
-    survey_html = """
+    # Generate lab session options
+    lab_options = "".join([f'<option value="{session}">{session}</option>' for session in LAB_SESSIONS])
+    
+    survey_html = f"""
     <!DOCTYPE html>
     <html lang="en">
     <head>
@@ -287,9 +312,10 @@ async def survey_form(request: Request):
       <script src="https://cdn.tailwindcss.com"></script>
       <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
       <style>
-        :root { --clr-primary: #006DAE; --clr-secondary: #CC0000; }
-        body { font-family: 'Noto Sans JP', sans-serif; background: #f5f5f5; min-height: 100vh; padding: 20px; }
-        .rating-option input:checked + div { background: #006DAE; color: white; border-color: #006DAE; }
+        :root {{ --clr-primary: #006DAE; --clr-secondary: #CC0000; }}
+        body {{ font-family: 'Noto Sans JP', sans-serif; background: #f5f5f5; min-height: 100vh; padding: 20px; }}
+        .rating-option input:checked + div {{ background: #006DAE; color: white; border-color: #006DAE; }}
+        .lab-select {{ font-size: 0.9rem; }}
       </style>
     </head>
     <body>
@@ -307,7 +333,7 @@ async def survey_form(request: Request):
         <div class="max-w-4xl w-full bg-white rounded-2xl shadow-2xl p-8">
           <div class="text-center mb-8">
             <h1 class="text-4xl font-bold text-blue-800 mb-4">FIT5122 Unit Effectiveness Survey</h1>
-            <p class="text-lg text-gray-600">Monash University Faculty of Information Technology</p>
+            <p class="text-lg text-gray-600">Industry Experience Studio Project - Monash University</p>
           </div>
 
           <div class="bg-amber-50 border-l-4 border-amber-400 p-4 mb-6">
@@ -337,29 +363,22 @@ async def survey_form(request: Request):
                 <div class="flex gap-6">
                   <label class="flex items-center">
                     <input type="radio" name="participated_fully" value="true" required class="mr-2">
-                    <span>Yes</span>
+                    <span>Yes, I completed all required activities</span>
                   </label>
                   <label class="flex items-center">
                     <input type="radio" name="participated_fully" value="false" required class="mr-2">
-                    <span>No</span>
+                    <span>No, I did not complete all activities</span>
                   </label>
                 </div>
               </div>
 
               <div>
-                <label class="block text-lg font-medium text-gray-700 mb-3">Which lab session did you attend?</label>
-                <select name="lab_session" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-                  <option value="">Select lab session</option>
-                  <option value="Monday 9am">Monday 9am</option>
-                  <option value="Monday 2pm">Monday 2pm</option>
-                  <option value="Tuesday 10am">Tuesday 10am</option>
-                  <option value="Tuesday 3pm">Tuesday 3pm</option>
-                  <option value="Wednesday 11am">Wednesday 11am</option>
-                  <option value="Wednesday 4pm">Wednesday 4pm</option>
-                  <option value="Thursday 1pm">Thursday 1pm</option>
-                  <option value="Friday 9am">Friday 9am</option>
-                  <option value="Online">Online/Recorded</option>
+                <label class="block text-lg font-medium text-gray-700 mb-3">Which lab session did you primarily attend?</label>
+                <select name="lab_session" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 lab-select">
+                  <option value="">Select your primary lab session</option>
+                  {lab_options}
                 </select>
+                <p class="text-sm text-gray-500 mt-2">All sessions: Wednesdays, Clayton Campus (30/7-24/9, 8/10-22/10)</p>
               </div>
             </div>
 
@@ -370,7 +389,7 @@ async def survey_form(request: Request):
 
               <!-- Unit Content Quality -->
               <div class="mb-6">
-                <label class="block text-lg font-medium text-gray-800 mb-3">Unit Content Quality & Relevance</label>
+                <label class="block text-lg font-medium text-gray-800 mb-3">Unit Content Quality & Industry Relevance</label>
                 <div class="flex gap-4 justify-center">
                   {% for i in range(1, 6) %}
                   <label class="flex flex-col items-center cursor-pointer">
@@ -385,7 +404,7 @@ async def survey_form(request: Request):
 
               <!-- Teaching Effectiveness -->
               <div class="mb-6">
-                <label class="block text-lg font-medium text-gray-800 mb-3">Teaching & Instruction Effectiveness</label>
+                <label class="block text-lg font-medium text-gray-800 mb-3">Teaching & Studio Supervision Effectiveness</label>
                 <div class="flex gap-4 justify-center">
                   {% for i in range(1, 6) %}
                   <label class="flex flex-col items-center cursor-pointer">
@@ -415,7 +434,7 @@ async def survey_form(request: Request):
 
               <!-- Learning Resources -->
               <div class="mb-6">
-                <label class="block text-lg font-medium text-gray-800 mb-3">Learning Resources & Materials</label>
+                <label class="block text-lg font-medium text-gray-800 mb-3">Learning Resources & Studio Facilities</label>
                 <div class="flex gap-4 justify-center">
                   {% for i in range(1, 6) %}
                   <label class="flex flex-col items-center cursor-pointer">
@@ -430,7 +449,7 @@ async def survey_form(request: Request):
 
               <!-- Overall Experience -->
               <div class="mb-6">
-                <label class="block text-lg font-medium text-gray-800 mb-3">Overall Unit Experience</label>
+                <label class="block text-lg font-medium text-gray-800 mb-3">Overall FIT5122 Studio Experience</label>
                 <div class="flex gap-4 justify-center">
                   {% for i in range(1, 6) %}
                   <label class="flex flex-col items-center cursor-pointer">
@@ -449,23 +468,23 @@ async def survey_form(request: Request):
               <h2 class="text-2xl font-semibold text-gray-800 mb-4">Detailed Feedback</h2>
               
               <div class="mb-6">
-                <label class="block text-lg font-medium text-gray-800 mb-3">What were the most positive aspects of FIT5122?</label>
-                <textarea name="positive_aspects" rows="3" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Share what worked well in the unit..."></textarea>
+                <label class="block text-lg font-medium text-gray-800 mb-3">What were the most valuable aspects of the FIT5122 studio experience?</label>
+                <textarea name="positive_aspects" rows="3" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Industry projects, team collaboration, practical skills..."></textarea>
               </div>
 
               <div class="mb-6">
-                <label class="block text-lg font-medium text-gray-800 mb-3">Suggestions for improvement:</label>
-                <textarea name="improvement_suggestions" rows="3" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="How can we improve FIT5122 for future students?"></textarea>
+                <label class="block text-lg font-medium text-gray-800 mb-3">Suggestions for improving the studio experience:</label>
+                <textarea name="improvement_suggestions" rows="3" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Project scope, supervision, resources, timing..."></textarea>
               </div>
 
               <div class="mb-6">
-                <label class="block text-lg font-medium text-gray-800 mb-3">Any technical issues or challenges faced?</label>
-                <textarea name="technical_issues" rows="2" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Moodle, software, or other technical issues..."></textarea>
+                <label class="block text-lg font-medium text-gray-800 mb-3">Any technical or logistical challenges faced during the studio?</label>
+                <textarea name="technical_issues" rows="2" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Software access, team coordination, facility issues..."></textarea>
               </div>
 
               <div>
-                <label class="block text-lg font-medium text-gray-800 mb-3">Additional comments:</label>
-                <textarea name="additional_comments" rows="2" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Any other feedback..."></textarea>
+                <label class="block text-lg font-medium text-gray-800 mb-3">Additional comments about your FIT5122 experience:</label>
+                <textarea name="additional_comments" rows="2" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Overall experience, industry relevance, skill development..."></textarea>
               </div>
             </div>
 
