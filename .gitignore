@@ -2,12 +2,7 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
-.Python
-env/
-venv/
-.venv/
 .env
-.idea/
-.vscode/
-*.swp
-*.swo
+.venv/
+venv/
+.DS_Store
