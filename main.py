@@ -60,7 +60,6 @@ def get_db():
         db.close()
 
 
-app = FastAPI(title="FIT5122 Unit Effectiveness Survey", version="1.0.0")
 
 # All FIT5122 Lab Sessions
 LAB_SESSIONS = [
