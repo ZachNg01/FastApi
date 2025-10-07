@@ -289,9 +289,22 @@ async def home():
     return HTML_TEMPLATE
 
 @app.get("/survey", response_class=HTMLResponse)
+@app.get("/survey", response_class=HTMLResponse)
 async def survey_form(request: Request):
     # Generate lab session options
     lab_options = "".join([f'<option value="{session}">{session}</option>' for session in LAB_SESSIONS])
+    
+    # Generate rating options for each question
+    rating_options = ""
+    for i in range(1, 6):
+        rating_options += f"""
+        <label class="flex flex-col items-center cursor-pointer">
+            <input type="radio" name="unit_content_quality" value="{i}" class="sr-only">
+            <div class="w-12 h-12 rounded-full border-2 border-blue-300 flex items-center justify-center transition-all duration-300 hover:bg-blue-100 rating-option">
+                {i}
+            </div>
+        </label>
+        """
     
     survey_html = f"""
     <!DOCTYPE html>
@@ -381,14 +394,7 @@ async def survey_form(request: Request):
               <div class="mb-6">
                 <label class="block text-lg font-medium text-gray-800 mb-3">Unit Content Quality & Industry Relevance</label>
                 <div class="flex gap-4 justify-center">
-                  {% for i in range(1, 6) %}
-                  <label class="flex flex-col items-center cursor-pointer">
-                    <input type="radio" name="unit_content_quality" value="{{ i }}" class="sr-only">
-                    <div class="w-12 h-12 rounded-full border-2 border-blue-300 flex items-center justify-center transition-all duration-300 hover:bg-blue-100 rating-option">
-                      {{ i }}
-                    </div>
-                  </label>
-                  {% endfor %}
+                  {rating_options}
                 </div>
               </div>
 
@@ -396,14 +402,7 @@ async def survey_form(request: Request):
               <div class="mb-6">
                 <label class="block text-lg font-medium text-gray-800 mb-3">Teaching & Studio Supervision Effectiveness</label>
                 <div class="flex gap-4 justify-center">
-                  {% for i in range(1, 6) %}
-                  <label class="flex flex-col items-center cursor-pointer">
-                    <input type="radio" name="teaching_effectiveness" value="{{ i }}" class="sr-only">
-                    <div class="w-12 h-12 rounded-full border-2 border-blue-300 flex items-center justify-center transition-all duration-300 hover:bg-blue-100 rating-option">
-                      {{ i }}
-                    </div>
-                  </label>
-                  {% endfor %}
+                  {rating_options.replace('unit_content_quality', 'teaching_effectiveness')}
                 </div>
               </div>
 
@@ -411,14 +410,7 @@ async def survey_form(request: Request):
               <div class="mb-6">
                 <label class="block text-lg font-medium text-gray-800 mb-3">Assessment Fairness & Clarity</label>
                 <div class="flex gap-4 justify-center">
-                  {% for i in range(1, 6) %}
-                  <label class="flex flex-col items-center cursor-pointer">
-                    <input type="radio" name="assessment_fairness" value="{{ i }}" class="sr-only">
-                    <div class="w-12 h-12 rounded-full border-2 border-blue-300 flex items-center justify-center transition-all duration-300 hover:bg-blue-100 rating-option">
-                      {{ i }}
-                    </div>
-                  </label>
-                  {% endfor %}
+                  {rating_options.replace('unit_content_quality', 'assessment_fairness')}
                 </div>
               </div>
 
@@ -426,14 +418,7 @@ async def survey_form(request: Request):
               <div class="mb-6">
                 <label class="block text-lg font-medium text-gray-800 mb-3">Learning Resources & Studio Facilities</label>
                 <div class="flex gap-4 justify-center">
-                  {% for i in range(1, 6) %}
-                  <label class="flex flex-col items-center cursor-pointer">
-                    <input type="radio" name="learning_resources" value="{{ i }}" class="sr-only">
-                    <div class="w-12 h-12 rounded-full border-2 border-blue-300 flex items-center justify-center transition-all duration-300 hover:bg-blue-100 rating-option">
-                      {{ i }}
-                    </div>
-                  </label>
-                  {% endfor %}
+                  {rating_options.replace('unit_content_quality', 'learning_resources')}
                 </div>
               </div>
 
@@ -441,14 +426,7 @@ async def survey_form(request: Request):
               <div class="mb-6">
                 <label class="block text-lg font-medium text-gray-800 mb-3">Overall FIT5122 Studio Experience</label>
                 <div class="flex gap-4 justify-center">
-                  {% for i in range(1, 6) %}
-                  <label class="flex flex-col items-center cursor-pointer">
-                    <input type="radio" name="overall_experience" value="{{ i }}" class="sr-only">
-                    <div class="w-12 h-12 rounded-full border-2 border-blue-300 flex items-center justify-center transition-all duration-300 hover:bg-blue-100 rating-option">
-                      {{ i }}
-                    </div>
-                  </label>
-                  {% endfor %}
+                  {rating_options.replace('unit_content_quality', 'overall_experience')}
                 </div>
               </div>
             </div>
@@ -531,7 +509,6 @@ async def survey_form(request: Request):
     </html>
     """
     return HTMLResponse(content=survey_html)
-
 @app.post("/submit-survey")
 async def submit_survey(
     request: Request,
