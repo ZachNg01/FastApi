@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Cooking School Survey – Wallis Social Research</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <!-- Tailwind CSS for quick utilities -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+  <!-- tsParticles for animated background -->
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.11.1/tsparticles.bundle.min.js"></script>
+  <title>Cooking School Survey – Wallis Social Research</title>
+  <meta name="description" content="Student Satisfaction Survey for Cooking School using Wallis Social Research Methodology">
+  <meta name="keywords" content="cooking school, student survey, satisfaction, culinary education">
+  
+  <style>
+    :root {
+      --clr-bg: #111;
+      --clr-fg: #eee;
+      --clr-primary: #4F46E5;
+      --clr-secondary: #10B981;
+    }
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0; padding: 0;
+    }
+    body, html {
+      height: 100%; overflow-x: hidden;
+      font-family: 'Noto Sans JP', sans-serif;
+      color: var(--clr-fg);
+      position: relative;
+      /* Sakura tree background */
+      background: url('https://images.unsplash.com/photo-1522163182402-3bff2d4a46bc?auto=format&fit=crop&w=1950&q=80') center/cover no-repeat fixed;
+    }
+    a { text-decoration: none; }
+
+    /* tsParticles */
+    #tsparticles {
+      position: absolute; top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: -10;
+    }
+    /* Animated gradient overlay */
+    .gradient-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(45deg,
+        rgba(79,70,229,0.15) 0%,
+        rgba(16,185,129,0.15) 25%,
+        rgba(139,92,246,0.15) 50%,
+        rgba(224,170,255,0.15) 75%,
+        rgba(79,70,229,0.15) 100%);
+      animation: overlayRotate 30s linear infinite;
+      pointer-events: none; z-index: -5;
+    }
+    @keyframes overlayRotate {
+      from { transform: rotate(0deg) scale(1.2); }
+      to   { transform: rotate(360deg) scale(1.2); }
+    }
+
+    /* Navbar */
+    header {
+      background: rgba(255,255,255,0.2);
+      backdrop-filter: blur(10px);
+      position: fixed; top: 0; width: 100%; z-index: 50;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    .container { max-width: 1280px; margin: 0 auto; }
+    nav a {
+      color: #000000; font-weight: 500;
+      transition: color 0.3s;
+    }
+    nav a:hover, nav a.active {
+      color: #3111e7;
+    }
+    #mobile-menu {
+      background: rgba(31,41,55,0.9);
+      backdrop-filter: blur(8px);
+    }
+
+    /* Survey content area */
+    .survey-container {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 100px 20px 20px;
+    }
+
+    /* Progress bar */
+    .progress-bar {
+      width: 100%;
+      max-width: 600px;
+      height: 6px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 3px;
+      margin: 20px auto;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #4F46E5, #10B981);
+      transition: width 0.5s ease;
+    }
+
+    /* Radio button styling */
+    input[type="radio"]:checked + .radio-circle {
+      background: #4F46E5;
+      color: white;
+      border-color: #4F46E5;
+      transform: scale(1.1);
+    }
+
+    footer {
+      text-align: center; padding: 1rem;
+      background: rgba(255,255,255,0.1); color: #e5e7eb;
+    }
+  </style>
+</head>
+<body>
+  <script src="//code.tidio.co/nitgtcn6l7l9b5epjifpws9lzhrdvs7d.js" async></script>
+
+  <!-- Highly animated background -->
+  <div id="tsparticles"></div>
+  <div class="gradient-overlay"></div>
+
+  <!-- Navbar -->
+  <header>
+    <div class="container px-6 py-4 flex items-center justify-between">
+      <a href="/" class="text-2xl font-bold text-fuchsia-400 hover:text-fuchsia-300">Cooking School Survey</a>
+
+      <nav class="hidden md:flex space-x-8" id="nav-links">
+        <a href="/">Home</a>
+        <a href="/survey/1" class="active">Take Survey</a>
+        <a href="/health">Health Check</a>
+      </nav>
+      <button id="burger" class="md:hidden text-gray-200 focus:outline-none">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="hidden md:hidden fixed top-16 inset-x-0 z-40">
+    <ul class="bg-gray-800 bg-opacity-90 backdrop-blur p-4 space-y-2 text-gray-200">
+      <li><a href="/">Home</a></li>
+      <li><a href="/survey/1">Take Survey</a></li>
+      <li><a href="/health">Health Check</a></li>
+    </ul>
+  </div>
+
+  <!-- Survey Content -->
+  <div class="survey-container">
+    {% if survey_content %}
+      <!-- Progress Bar -->
+      {% if current_page and total_pages %}
+      <div class="progress-bar">
+        <div class="progress-fill" style="width: {{ (current_page / total_pages) * 100 }}%"></div>
+      </div>
+      <div class="text-center text-white mb-4">
+        Page {{ current_page }} of {{ total_pages }}
+      </div>
+      {% endif %}
+      
+      <!-- Dynamic Survey Content -->
+      {{ survey_content | safe }}
+    {% else %}
+      <!-- Default Home Content -->
+      <div class="max-w-4xl mx-auto bg-white/90 backdrop-blur-sm rounded-2xl shadow-2xl p-12 text-center">
+        <h1 class="text-4xl font-bold text-gray-800 mb-6">Cooking School Student Satisfaction Survey</h1>
+        <p class="text-xl text-gray-600 mb-8">
+          Wallis Social Research Methodology
+        </p>
+        <div class="grid md:grid-cols-3 gap-6 mb-8">
+          <div class="bg-indigo-50 p-6 rounded-lg">
+            <div class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <span class="text-indigo-600 font-bold">🍳</span>
+            </div>
+            <h3 class="font-semibold text-gray-800 mb-2">Confidential</h3>
+            <p class="text-gray-600 text-sm">Your responses are anonymous and secure</p>
+          </div>
+          <div class="bg-green-50 p-6 rounded-lg">
+            <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <span class="text-green-600 font-bold">⏱️</span>
+            </div>
+            <h3 class="font-semibold text-gray-800 mb-2">5-10 Minutes</h3>
+            <p class="text-gray-600 text-sm">Quick and easy to complete</p>
+          </div>
+          <div class="bg-purple-50 p-6 rounded-lg">
+            <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <span class="text-purple-600 font-bold">🌟</span>
+            </div>
+            <h3 class="font-semibold text-gray-800 mb-2">Make a Difference</h3>
+            <p class="text-gray-600 text-sm">Help improve our programs</p>
+          </div>
+        </div>
+        <a href="/survey/1" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-12 rounded-lg text-lg transition duration-300 transform hover:scale-105 inline-block">
+          Start Survey
+        </a>
+      </div>
+    {% endif %}
+  </div>
+
+  <footer class="text-center text-gray-300 p-6 bg-white/5 w-full flex flex-col md:flex-row items-center justify-center gap-4 text-sm">
+    <span>&copy; 2024 Cooking School Survey - Wallis Social Research</span>
+    <span>Confidential Educational Research</span>
+  </footer>
+
+  <script>
+    // tsParticles init
+    tsParticles.load('tsparticles', {
+      fpsLimit: 60,
+      background: { color: 'transparent' },
+      particles: {
+        number: { value: 120, density: { enable: true, area: 800 } },
+        color: { value: ['#4F46E5', '#10b981', '#8B5CF6'] },
+        shape: { type: ['circle','triangle','star'] },
+        opacity: { value: 0.4 },
+        size: { value: { min: 1, max: 6 } },
+        links: {
+          enable: true,
+          distance: 120,
+          color: '#888',
+          opacity: 0.2,
+          width: 1
+        },
+        move: {
+          enable: true,
+          speed: 2,
+          random: true,
+          straight: false,
+          outModes: { default: 'bounce' },
+          attract: { enable: true, rotateX: 600, rotateY: 1200 }
+        }
+      },
+      interactivity: {
+        events: {
+          onHover: { enable: true, mode: 'bubble' },
+          onClick: { enable: true, mode: 'repulse' }
+        },
+        modes: {
+          bubble: { distance: 200, size: 8, duration: 2 },
+          repulse: { distance: 150, duration: 0.4 }
+        }
+      },
+      detectRetina: true
+    });
+
+    // Mobile menu toggle
+    document.getElementById('burger').addEventListener('click', () => {
+      document.getElementById('mobile-menu').classList.toggle('hidden');
+    });
+
+    // Radio button interaction
+    document.addEventListener('click', function(e) {
+      if (e.target.type === 'radio') {
+        const allRadios = document.querySelectorAll('input[type="radio"]');
+        allRadios.forEach(radio => {
+          const circle = radio.nextElementSibling;
+          if (circle && circle.classList.contains('radio-circle')) {
+            circle.style.transform = 'scale(1)';
+            circle.style.background = 'transparent';
+            circle.style.color = 'inherit';
+          }
+        });
+        
+        const selectedCircle = e.target.nextElementSibling;
+        if (selectedCircle && selectedCircle.classList.contains('radio-circle')) {
+          selectedCircle.style.transform = 'scale(1.1)';
+          selectedCircle.style.background = '#4F46E5';
+          selectedCircle.style.color = 'white';
+        }
+      }
+    });
+  </script>
+</body>
+</html>
