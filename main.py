@@ -22,7 +22,7 @@ async def home():
     </head>
     <body>
         <div class="container">
-            <h1>Welcome to My FastAPI App! 🚀</h1>
+            <h1>Welcome to My FastAPI App!</h1>
             <p>Successfully deployed on Railway.</p>
             <a href="/docs">View API Docs</a>
         </div>
