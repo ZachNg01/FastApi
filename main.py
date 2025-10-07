@@ -31,6 +31,7 @@ HTML_TEMPLATE = """
       font-family: 'Noto Sans JP', sans-serif;
       color: var(--clr-fg);
       position: relative;
+      /* Sakura tree background */
       background: url('https://images.unsplash.com/photo-1522163182402-3bff2d4a46bc?auto=format&fit=crop&w=1950&q=80') center/cover no-repeat fixed;
     }
     a { text-decoration: none; }
@@ -41,6 +42,7 @@ HTML_TEMPLATE = """
       width: 100%; height: 100%;
       z-index: -10;
     }
+    /* Animated gradient overlay */
     .gradient-overlay {
       position: absolute; inset: 0;
       background: linear-gradient(45deg,
@@ -64,6 +66,7 @@ HTML_TEMPLATE = """
       position: fixed; top: 0; width: 100%; z-index: 50;
       box-shadow: 0 2px 8px rgba(0,0,0,0.2);
     }
+    .container { max-width: 1280px; margin: 0 auto; }
     nav a {
       color: #000000; font-weight: 500;
       transition: color 0.3s;
@@ -76,22 +79,90 @@ HTML_TEMPLATE = """
       backdrop-filter: blur(8px);
     }
 
-    /* Main content */
-    .main-content {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 100px 20px 20px;
-    }
-
+    /* About Me Card */
     .info-card {
+      margin: 100px auto 2rem;
       max-width: 800px;
       background: rgba(31,41,55,0.8);
       backdrop-filter: blur(8px);
       padding: 2rem; border-radius: 0.5rem;
       box-shadow: 0 8px 24px rgba(0,0,0,0.7);
       text-align: center;
+    }
+    .info-card h1 {
+      font-size: 2.5rem; color: var(--clr-primary); margin-bottom: 1rem;
+    }
+    .info-card p {
+      font-size: 1.125rem; line-height: 1.6; opacity: 0.9;
+    }
+
+    /* Map container */
+    #map {
+      width: 100%; height: 400px;
+      max-width: 1200px;
+      margin: 2rem auto;
+      border-radius: 0.5rem;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.6);
+    }
+
+    /* Skillset Section */
+    .skills {
+      display: flex; flex-wrap: wrap; gap: 1rem;
+      padding: 1rem; max-width: 1200px; margin: 0 auto 4rem;
+    }
+    .skill-card {
+      flex: 1 1 280px;
+      background: rgba(31,41,55,0.9);
+      border-radius: 0.5rem; overflow: hidden;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.6);
+      transition: transform 0.3s, box-shadow 0.3s;
+      display: flex; flex-direction: column;
+    }
+    .skill-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.8);
+    }
+    .skill-header {
+      background: #1f2937; padding: 1rem;
+      display: flex; align-items: center; gap: 1rem;
+    }
+    .skill-header svg {
+      width: 2rem; height: 2rem; fill: var(--clr-secondary);
+    }
+    .skill-header h3 {
+      color: var(--clr-secondary); font-size: 1.25rem; margin: 0;
+    }
+    .skill-body {
+      padding: 1.5rem; flex: 1;
+      color: #d1d5db; line-height: 1.5;
+    }
+
+    /* Interests Section */
+    .interests {
+      max-width: 1200px; margin: 0 auto 4rem;
+      padding: 2rem; display: grid;
+      grid-template-columns: repeat(auto-fit,minmax(240px,1fr));
+      gap: 2rem;
+    }
+    .interest-card {
+      background: rgba(31,41,55,0.9);
+      border-radius: 0.5rem; padding: 2rem 1rem;
+      text-align: center; box-shadow: 0 4px 16px rgba(0,0,0,0.6);
+      transition: transform 0.3s, box-shadow 0.3s;
+      position: relative; overflow: hidden;
+    }
+    .interest-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.8);
+    }
+    .interest-card h3 {
+      font-size: 1.5rem;
+      color: yellow;
+      margin-bottom: 0.5rem;
+    }
+
+    .interest-card p {
+      color: #d1d5db; line-height: 1.5;
     }
 
     footer {
@@ -108,15 +179,19 @@ HTML_TEMPLATE = """
   <!-- Navbar -->
   <header>
     <div class="container px-6 py-4 flex items-center justify-between">
-      <a href="/" class="text-2xl font-bold text-fuchsia-400 hover:text-fuchsia-300">Cooking School Survey</a>
+      <a href="index.html" class="text-2xl font-bold text-fuchsia-400 hover:text-fuchsia-300">Zach Ng</a>
+
       <nav class="hidden md:flex space-x-8" id="nav-links">
-        <a href="/" class="active">Home</a>
-        <a href="/survey">Take Survey</a>
-        <a href="/health">Health</a>
+        <a href="index.html">Home</a>
+        <a href="zach.html" class="active">About Me</a>
+        <a href="about.html">My Skillset</a>
+        <a href="skills.html">My Projects</a>
+        <a href="blog_main.html">My Updates</a>
       </nav>
       <button id="burger" class="md:hidden text-gray-200 focus:outline-none">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M4 6h16M4 12h16M4 18h16"/>
         </svg>
       </button>
     </div>
@@ -125,9 +200,12 @@ HTML_TEMPLATE = """
   <!-- Mobile Menu -->
   <div id="mobile-menu" class="hidden md:hidden fixed top-16 inset-x-0 z-40">
     <ul class="bg-gray-800 bg-opacity-90 backdrop-blur p-4 space-y-2 text-gray-200">
-      <li><a href="/">Home</a></li>
-      <li><a href="/survey">Take Survey</a></li>
-      <li><a href="/health">Health</a></li>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="zach.html">About Me</a></li>
+      <li><a href="about.html">My Skillset</a></li>
+      <li><a href="skills.html">My Projects</a></li>
+      <li><a href="blog_main.html">My Updates</a></li>
+
     </ul>
   </div>
 
