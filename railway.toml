@@ -1,0 +1,15 @@
+[deploy]
+healthcheckPath = "/health"
+healthcheckTimeout = 300
+restartPolicyType = "ON_FAILURE"
+
+[build]
+builder = "nixpacks"
+
+[[services]]
+name = "web"
+[[services.ports]]
+port = 8000
+protocol = "http"
+
+[environments.production]
