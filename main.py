@@ -155,18 +155,28 @@ HTML_TEMPLATE = """
       </div>
 
       <!-- Survey Description -->
-      <div class="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-lg mb-8">
+        <div class="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-lg mb-8">
         <h2 class="text-2xl font-semibold text-blue-800 mb-3">About This Survey</h2>
         <p class="text-gray-700 mb-4">
-          The Monash Faculty of Information Technology is undertaking a comprehensive study to assess the effectiveness of FIT5122 - Professional Practice. 
-          This research aims to evaluate student perceptions, content delivery, and overall learning experience. 
-          Your feedback will help us identify strengths and areas for improvement, ultimately enhancing the unit for future students.
-        <p class="text-gray-700">
-          The survey covers various aspects including teaching quality, curriculum relevance, assessment methodology, 
-          and the overall student experience. Your honest responses are invaluable for continuous improvement.
+            The Monash Faculty of Information Technology is undertaking a comprehensive study to assess the effectiveness of FIT5122 - Professional Practice. This research aims to evaluate student perceptions, content delivery, and overall learning experience. Your feedback will help us identify strengths and areas for improvement, ultimately enhancing the unit for future students.
         </p>
+        <p class="text-gray-700">
+            The survey covers various aspects, including teaching quality, curriculum relevance, assessment methodology, and the overall student experience. Your honest responses are invaluable for continuous improvement.
+        </p>
+        </div>
+        <div class="flex justify-center mb-8">
+        <div class="bg-white p-4 rounded-lg shadow-lg border border-gray-200">
+          <img 
+            src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcRCqZ_9CiIZor_M17pHB7OQ7qlL4jl2nKB6Alq-Az1Hg_ExwPi_" 
+            alt="Education Research" 
+            class="rounded-lg max-w-full h-auto max-h-80 object-cover shadow-md"
+            onerror="this.style.display='none'"
+          >
+          <p class="text-center text-gray-600 text-sm mt-2 italic">
+            Educational Research in Action - Monash University
+          </p>
+        </div>
       </div>
-
       <!-- Ethics Statement -->
       <div class="bg-amber-50 border-l-4 border-amber-500 p-6 rounded-lg mb-8">
         <h2 class="text-2xl font-semibold text-amber-800 mb-3">Ethics Approval & Confidentiality</h2>
@@ -178,7 +188,7 @@ HTML_TEMPLATE = """
         <ul class="text-amber-700 list-disc list-inside space-y-2">
           <li>All responses collected are completely anonymous and confidential</li>
           <li>Data will be used solely for educational research and unit improvement</li>
-          <li>Participation is voluntary and you may withdraw from participating or request the deletion of your responses at any time</li>
+          <li>Participation is voluntary, and you can withdraw or request deletion of your responses at any time.</li>
           <li>Aggregated results may be used in academic publications</li>
         </ul>
         <p class="text-amber-600 text-sm mt-3">
