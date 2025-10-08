@@ -167,7 +167,7 @@ HTML_TEMPLATE = """
         <img 
             src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcRCqZ_9CiIZor_M17pHB7OQ7qlL4jl2nKB6Alq-Az1Hg_ExwPi_" 
             alt="Education Research" 
-            class="rounded-lg max-w-full h-auto max-h-80 object-cover shadow-md"
+            class="w-full rounded-lg max-w-full h-auto max-h-80 object-cover shadow-md"
             onerror="this.style.display='none'"
           >
       <!-- Ethics Statement -->
