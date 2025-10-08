@@ -216,20 +216,9 @@ HTML_TEMPLATE = """
 @app.get("/", response_class=HTMLResponse)
 async def home():
     return HTMLResponse(HTML_TEMPLATE)
-
 @app.get("/survey", response_class=HTMLResponse)
 async def survey_form():
     lab_options = "".join([f'<option value="{session}">{session}</option>' for session in LAB_SESSIONS])
-    
-    # Generate rating options
-    rating_html = ""
-    for i in range(1, 6):
-        rating_html += f"""
-        <label class="flex flex-col items-center cursor-pointer">
-            <input type="radio" name="unit_content_quality" value="{i}" class="sr-only">
-            <div class="w-12 h-12 rounded-full border-2 border-blue-300 flex items-center justify-center transition-all duration-300 hover:bg-blue-100 rating-option">{i}</div>
-        </label>
-        """
     
     survey_html = f"""
     <!DOCTYPE html>
@@ -241,7 +230,12 @@ async def survey_form():
         <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
         <style>
             body {{ font-family: 'Noto Sans JP', sans-serif; background: #f8fafc; }}
-            .rating-option input:checked + div {{ background: #006DAE; color: white; border-color: #006DAE; }}
+            .rating-option input:checked + div {{ 
+                background: #006DAE !important; 
+                color: white !important; 
+                border-color: #006DAE !important; 
+            }}
+            .rating-group {{ margin-bottom: 2rem; }}
         </style>
     </head>
     <body>
@@ -312,43 +306,143 @@ async def survey_form():
                             <p class="text-gray-600 mb-6">Please rate the following aspects of FIT5122 (1 = Very Poor, 5 = Excellent)</p>
 
                             <div class="space-y-8">
-                                <div>
+                                <!-- Unit Content Quality -->
+                                <div class="rating-group">
                                     <label class="block text-lg font-medium text-gray-800 mb-3">Studio Project Content & Industry Relevance</label>
                                     <p class="text-gray-600 text-sm mb-3">Quality and practical relevance of studio project materials</p>
                                     <div class="flex gap-4 justify-center">
-                                        {rating_html.replace('unit_content_quality', 'unit_content_quality')}
+                                        <label class="flex flex-col items-center cursor-pointer">
+                                            <input type="radio" name="unit_content_quality" value="1" class="sr-only">
+                                            <div class="w-12 h-12 rounded-full border-2 border-blue-300 flex items-center justify-center transition-all duration-300 hover:bg-blue-100 rating-option">1</div>
+                                        </label>
+                                        <label class="flex flex-col items-center cursor-pointer">
+                                            <input type="radio" name="unit_content_quality" value="2" class="sr-only">
+                                            <div class="w-12 h-12 rounded-full border-2 border-blue-300 flex items-center justify-center transition-all duration-300 hover:bg-blue-100 rating-option">2</div>
+                                        </label>
+                                        <label class="flex flex-col items-center cursor-pointer">
+                                            <input type="radio" name="unit_content_quality" value="3" class="sr-only">
+                                            <div class="w-12 h-12 rounded-full border-2 border-blue-300 flex items-center justify-center transition-all duration-300 hover:bg-blue-100 rating-option">3</div>
+                                        </label>
+                                        <label class="flex flex-col items-center cursor-pointer">
+                                            <input type="radio" name="unit_content_quality" value="4" class="sr-only">
+                                            <div class="w-12 h-12 rounded-full border-2 border-blue-300 flex items-center justify-center transition-all duration-300 hover:bg-blue-100 rating-option">4</div>
+                                        </label>
+                                        <label class="flex flex-col items-center cursor-pointer">
+                                            <input type="radio" name="unit_content_quality" value="5" class="sr-only">
+                                            <div class="w-12 h-12 rounded-full border-2 border-blue-300 flex items-center justify-center transition-all duration-300 hover:bg-blue-100 rating-option">5</div>
+                                        </label>
                                     </div>
                                 </div>
 
-                                <div>
+                                <!-- Teaching Effectiveness -->
+                                <div class="rating-group">
                                     <label class="block text-lg font-medium text-gray-800 mb-3">Teaching & Studio Supervision</label>
                                     <p class="text-gray-600 text-sm mb-3">Effectiveness of teaching staff and studio supervision</p>
                                     <div class="flex gap-4 justify-center">
-                                        {rating_html.replace('unit_content_quality', 'teaching_effectiveness')}
+                                        <label class="flex flex-col items-center cursor-pointer">
+                                            <input type="radio" name="teaching_effectiveness" value="1" class="sr-only">
+                                            <div class="w-12 h-12 rounded-full border-2 border-blue-300 flex items-center justify-center transition-all duration-300 hover:bg-blue-100 rating-option">1</div>
+                                        </label>
+                                        <label class="flex flex-col items-center cursor-pointer">
+                                            <input type="radio" name="teaching_effectiveness" value="2" class="sr-only">
+                                            <div class="w-12 h-12 rounded-full border-2 border-blue-300 flex items-center justify-center transition-all duration-300 hover:bg-blue-100 rating-option">2</div>
+                                        </label>
+                                        <label class="flex flex-col items-center cursor-pointer">
+                                            <input type="radio" name="teaching_effectiveness" value="3" class="sr-only">
+                                            <div class="w-12 h-12 rounded-full border-2 border-blue-300 flex items-center justify-center transition-all duration-300 hover:bg-blue-100 rating-option">3</div>
+                                        </label>
+                                        <label class="flex flex-col items-center cursor-pointer">
+                                            <input type="radio" name="teaching_effectiveness" value="4" class="sr-only">
+                                            <div class="w-12 h-12 rounded-full border-2 border-blue-300 flex items-center justify-center transition-all duration-300 hover:bg-blue-100 rating-option">4</div>
+                                        </label>
+                                        <label class="flex flex-col items-center cursor-pointer">
+                                            <input type="radio" name="teaching_effectiveness" value="5" class="sr-only">
+                                            <div class="w-12 h-12 rounded-full border-2 border-blue-300 flex items-center justify-center transition-all duration-300 hover:bg-blue-100 rating-option">5</div>
+                                        </label>
                                     </div>
                                 </div>
 
-                                <div>
+                                <!-- Assessment Fairness -->
+                                <div class="rating-group">
                                     <label class="block text-lg font-medium text-gray-800 mb-3">Assessment Design & Fairness</label>
                                     <p class="text-gray-600 text-sm mb-3">Clarity and fairness of assessment tasks and criteria</p>
                                     <div class="flex gap-4 justify-center">
-                                        {rating_html.replace('unit_content_quality', 'assessment_fairness')}
+                                        <label class="flex flex-col items-center cursor-pointer">
+                                            <input type="radio" name="assessment_fairness" value="1" class="sr-only">
+                                            <div class="w-12 h-12 rounded-full border-2 border-blue-300 flex items-center justify-center transition-all duration-300 hover:bg-blue-100 rating-option">1</div>
+                                        </label>
+                                        <label class="flex flex-col items-center cursor-pointer">
+                                            <input type="radio" name="assessment_fairness" value="2" class="sr-only">
+                                            <div class="w-12 h-12 rounded-full border-2 border-blue-300 flex items-center justify-center transition-all duration-300 hover:bg-blue-100 rating-option">2</div>
+                                        </label>
+                                        <label class="flex flex-col items-center cursor-pointer">
+                                            <input type="radio" name="assessment_fairness" value="3" class="sr-only">
+                                            <div class="w-12 h-12 rounded-full border-2 border-blue-300 flex items-center justify-center transition-all duration-300 hover:bg-blue-100 rating-option">3</div>
+                                        </label>
+                                        <label class="flex flex-col items-center cursor-pointer">
+                                            <input type="radio" name="assessment_fairness" value="4" class="sr-only">
+                                            <div class="w-12 h-12 rounded-full border-2 border-blue-300 flex items-center justify-center transition-all duration-300 hover:bg-blue-100 rating-option">4</div>
+                                        </label>
+                                        <label class="flex flex-col items-center cursor-pointer">
+                                            <input type="radio" name="assessment_fairness" value="5" class="sr-only">
+                                            <div class="w-12 h-12 rounded-full border-2 border-blue-300 flex items-center justify-center transition-all duration-300 hover:bg-blue-100 rating-option">5</div>
+                                        </label>
                                     </div>
                                 </div>
 
-                                <div>
+                                <!-- Learning Resources -->
+                                <div class="rating-group">
                                     <label class="block text-lg font-medium text-gray-800 mb-3">Learning Resources & Facilities</label>
                                     <p class="text-gray-600 text-sm mb-3">Quality of learning materials and studio facilities</p>
                                     <div class="flex gap-4 justify-center">
-                                        {rating_html.replace('unit_content_quality', 'learning_resources')}
+                                        <label class="flex flex-col items-center cursor-pointer">
+                                            <input type="radio" name="learning_resources" value="1" class="sr-only">
+                                            <div class="w-12 h-12 rounded-full border-2 border-blue-300 flex items-center justify-center transition-all duration-300 hover:bg-blue-100 rating-option">1</div>
+                                        </label>
+                                        <label class="flex flex-col items-center cursor-pointer">
+                                            <input type="radio" name="learning_resources" value="2" class="sr-only">
+                                            <div class="w-12 h-12 rounded-full border-2 border-blue-300 flex items-center justify-center transition-all duration-300 hover:bg-blue-100 rating-option">2</div>
+                                        </label>
+                                        <label class="flex flex-col items-center cursor-pointer">
+                                            <input type="radio" name="learning_resources" value="3" class="sr-only">
+                                            <div class="w-12 h-12 rounded-full border-2 border-blue-300 flex items-center justify-center transition-all duration-300 hover:bg-blue-100 rating-option">3</div>
+                                        </label>
+                                        <label class="flex flex-col items-center cursor-pointer">
+                                            <input type="radio" name="learning_resources" value="4" class="sr-only">
+                                            <div class="w-12 h-12 rounded-full border-2 border-blue-300 flex items-center justify-center transition-all duration-300 hover:bg-blue-100 rating-option">4</div>
+                                        </label>
+                                        <label class="flex flex-col items-center cursor-pointer">
+                                            <input type="radio" name="learning_resources" value="5" class="sr-only">
+                                            <div class="w-12 h-12 rounded-full border-2 border-blue-300 flex items-center justify-center transition-all duration-300 hover:bg-blue-100 rating-option">5</div>
+                                        </label>
                                     </div>
                                 </div>
 
-                                <div>
+                                <!-- Overall Experience -->
+                                <div class="rating-group">
                                     <label class="block text-lg font-medium text-gray-800 mb-3">Overall Studio Experience</label>
                                     <p class="text-gray-600 text-sm mb-3">Your comprehensive experience with FIT5122</p>
                                     <div class="flex gap-4 justify-center">
-                                        {rating_html.replace('unit_content_quality', 'overall_experience')}
+                                        <label class="flex flex-col items-center cursor-pointer">
+                                            <input type="radio" name="overall_experience" value="1" class="sr-only">
+                                            <div class="w-12 h-12 rounded-full border-2 border-blue-300 flex items-center justify-center transition-all duration-300 hover:bg-blue-100 rating-option">1</div>
+                                        </label>
+                                        <label class="flex flex-col items-center cursor-pointer">
+                                            <input type="radio" name="overall_experience" value="2" class="sr-only">
+                                            <div class="w-12 h-12 rounded-full border-2 border-blue-300 flex items-center justify-center transition-all duration-300 hover:bg-blue-100 rating-option">2</div>
+                                        </label>
+                                        <label class="flex flex-col items-center cursor-pointer">
+                                            <input type="radio" name="overall_experience" value="3" class="sr-only">
+                                            <div class="w-12 h-12 rounded-full border-2 border-blue-300 flex items-center justify-center transition-all duration-300 hover:bg-blue-100 rating-option">3</div>
+                                        </label>
+                                        <label class="flex flex-col items-center cursor-pointer">
+                                            <input type="radio" name="overall_experience" value="4" class="sr-only">
+                                            <div class="w-12 h-12 rounded-full border-2 border-blue-300 flex items-center justify-center transition-all duration-300 hover:bg-blue-100 rating-option">4</div>
+                                        </label>
+                                        <label class="flex flex-col items-center cursor-pointer">
+                                            <input type="radio" name="overall_experience" value="5" class="sr-only">
+                                            <div class="w-12 h-12 rounded-full border-2 border-blue-300 flex items-center justify-center transition-all duration-300 hover:bg-blue-100 rating-option">5</div>
+                                        </label>
                                     </div>
                                 </div>
                             </div>
@@ -414,23 +508,46 @@ async def survey_form():
         </div>
 
         <script>
+            // Enhanced rating selection with proper group handling
             document.addEventListener('click', function(e) {{
                 if (e.target.type === 'radio') {{
-                    const allRadios = document.querySelectorAll('input[type="radio"]');
-                    allRadios.forEach(radio => {{
+                    // Get all radio buttons in the same group (same name)
+                    const groupName = e.target.name;
+                    const allRadiosInGroup = document.querySelectorAll(`input[type="radio"][name="${{groupName}}"]`);
+                    
+                    // Reset all in this group
+                    allRadiosInGroup.forEach(radio => {{
                         const div = radio.nextElementSibling;
                         if (div && div.classList.contains('rating-option')) {{
                             div.style.background = 'transparent';
                             div.style.color = 'inherit';
+                            div.style.borderColor = '#93c5fd';
                         }}
                     }});
                     
+                    // Highlight selected one
                     const selectedDiv = e.target.nextElementSibling;
                     if (selectedDiv && selectedDiv.classList.contains('rating-option')) {{
                         selectedDiv.style.background = '#006DAE';
                         selectedDiv.style.color = 'white';
+                        selectedDiv.style.borderColor = '#006DAE';
                     }}
                 }}
+            }});
+
+            // Initialize any previously selected ratings on page load
+            document.addEventListener('DOMContentLoaded', function() {{
+                const allRadios = document.querySelectorAll('input[type="radio"]');
+                allRadios.forEach(radio => {{
+                    if (radio.checked) {{
+                        const div = radio.nextElementSibling;
+                        if (div && div.classList.contains('rating-option')) {{
+                            div.style.background = '#006DAE';
+                            div.style.color = 'white';
+                            div.style.borderColor = '#006DAE';
+                        }}
+                    }}
+                }});
             }});
         </script>
     </body>
