@@ -164,19 +164,12 @@ HTML_TEMPLATE = """
             The survey covers various aspects, including teaching quality, curriculum relevance, assessment methodology, and the overall student experience. Your honest responses are invaluable for continuous improvement.
         </p>
         </div>
-        <div class="flex justify-center mb-8">
-        <div class="bg-white p-4 rounded-lg shadow-lg border border-gray-200">
-          <img 
+        <img 
             src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcRCqZ_9CiIZor_M17pHB7OQ7qlL4jl2nKB6Alq-Az1Hg_ExwPi_" 
             alt="Education Research" 
             class="rounded-lg max-w-full h-auto max-h-80 object-cover shadow-md"
             onerror="this.style.display='none'"
           >
-          <p class="text-center text-gray-600 text-sm mt-2 italic">
-            Educational Research in Action - Monash University
-          </p>
-        </div>
-      </div>
       <!-- Ethics Statement -->
       <div class="bg-amber-50 border-l-4 border-amber-500 p-6 rounded-lg mb-8">
         <h2 class="text-2xl font-semibold text-amber-800 mb-3">Ethics Approval & Confidentiality</h2>
