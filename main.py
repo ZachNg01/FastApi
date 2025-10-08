@@ -121,7 +121,7 @@ HTML_TEMPLATE = """
     }
     body { 
       font-family: 'Noto Sans JP', sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: #aae6be;
       min-height: 100vh;
     }
   </style>
@@ -165,10 +165,9 @@ HTML_TEMPLATE = """
         </p>
         </div>
         <img 
-            src="Screenshot 2025-10-08 at 14-13-34 Fair Work Ombudsman Business Response Survey — wallis.social.png" 
+            src="images/Screenshot%202025-10-08%20at%2014-13-34%20Fair%20Work%20Ombudsman%20Business%20Response%20Survey%20—%20wallis.social.png" 
             alt="Education Research" 
-
-          >
+        >
       <!-- Ethics Statement -->
       <div class="bg-amber-50 border-l-4 border-amber-500 p-6 rounded-lg mb-8">
         <h2 class="text-2xl font-semibold text-amber-800 mb-3">Ethics Approval & Confidentiality</h2>
