@@ -16,11 +16,11 @@ print("🚀 Starting FIT5122 Survey Application...")
 DATABASE_URL = os.getenv("DATABASE_URL")
 
 if not DATABASE_URL:
-    print("❌ DATABASE_URL not set in environment variables")
-    print("⚠️ Using SQLite for local testing")
+    print("DATABASE_URL not set in environment variables")
+    print("Using SQLite for local testing")
     DATABASE_URL = "sqlite:///./test.db"
 else:
-    print("✅ DATABASE_URL found in environment")
+    print("DATABASE_URL found in environment")
 
 try:
     # For Neon PostgreSQL with SSL
@@ -38,11 +38,11 @@ try:
                 'sslrootcert': '/etc/ssl/certs/ca-certificates.crt'
             }
         )
-        print("✅ Using PostgreSQL with SSL configuration")
+        print("Using PostgreSQL with SSL configuration")
     else:
         # For SQLite
         engine = create_engine(DATABASE_URL)
-        print("✅ Using SQLite database")
+        print("Using SQLite database")
     
     SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
     Base = declarative_base()
@@ -65,10 +65,10 @@ try:
         consent_given = Column(Boolean, nullable=False, default=False)
     
     Base.metadata.create_all(bind=engine)
-    print("✅ Database setup complete")
+    print("Database setup complete")
     
 except Exception as e:
-    print(f"❌ Database setup failed: {e}")
+    print(f" Database setup failed: {e}")
     print("🔄 Falling back to in-memory SQLite")
     DATABASE_URL = "sqlite:///:memory:"
     engine = create_engine(DATABASE_URL)
@@ -158,13 +158,12 @@ HTML_TEMPLATE = """
       <div class="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-lg mb-8">
         <h2 class="text-2xl font-semibold text-blue-800 mb-3">About This Survey</h2>
         <p class="text-gray-700 mb-4">
-          This comprehensive survey evaluates the effectiveness of FIT5122 - Industry Experience Studio Project. 
-          Your feedback will help us understand the strengths of the unit and identify areas for improvement 
-          to enhance the learning experience for future students.
-        </p>
+          The Monash Faculty of Information Technology is undertaking a comprehensive study to assess the effectiveness of FIT5122 - Professional Practice. 
+          This research aims to evaluate student perceptions, content delivery, and overall learning experience. 
+          Your feedback will help us identify strengths and areas for improvement, ultimately enhancing the unit for future students.
         <p class="text-gray-700">
-          The survey covers various aspects including teaching quality, curriculum relevance, assessment methods, 
-          and overall student experience. Your honest responses are invaluable for continuous improvement.
+          The survey covers various aspects including teaching quality, curriculum relevance, assessment methodology, 
+          and the overall student experience. Your honest responses are invaluable for continuous improvement.
         </p>
       </div>
 
@@ -173,12 +172,13 @@ HTML_TEMPLATE = """
         <h2 class="text-2xl font-semibold text-amber-800 mb-3">Ethics Approval & Confidentiality</h2>
         <p class="text-amber-700 mb-3">
           <strong>Monash University Human Research Ethics Committee (MUHREC) Approved</strong><br>
-          Project ID: 2024-12345-FIT5122 | Approval Date: October 1, 2024
+          Project ID: 2025-12345-FIT5122 | Approval Date: October 7th, 2025
         </p>
+
         <ul class="text-amber-700 list-disc list-inside space-y-2">
-          <li>All responses are completely anonymous and confidential</li>
+          <li>All responses collected are completely anonymous and confidential</li>
           <li>Data will be used solely for educational research and unit improvement</li>
-          <li>Participation is voluntary and you may withdraw at any time</li>
+          <li>Participation is voluntary and you may withdraw from participating or request the deletion of your responses at any time</li>
           <li>Aggregated results may be used in academic publications</li>
         </ul>
         <p class="text-amber-600 text-sm mt-3">
@@ -226,8 +226,8 @@ HTML_TEMPLATE = """
 
   <footer class="bg-white/80 backdrop-blur-sm mt-12">
     <div class="container mx-auto px-6 py-4 text-center">
-      <p class="text-gray-600">&copy; 2024 Monash University - FIT5122 Educational Research</p>
-      <p class="text-gray-500 text-sm">Ethics Approved: MUHREC Project 2024-12345-FIT5122</p>
+      <p class="text-gray-600">&copy; 2025 Monash University - FIT5122 Educational Research</p>
+      <p class="text-gray-500 text-sm">Ethics Approved: MUHREC Project 2025-12345-FIT5122</p>
     </div>
   </footer>
 </body>
@@ -294,13 +294,13 @@ async def survey_form():
             <div class="max-w-4xl mx-auto">
                 <div class="text-center mb-8">
                     <h1 class="text-4xl font-bold text-gray-800 mb-4">FIT5122 Unit Effectiveness Survey</h1>
-                    <p class="text-lg text-gray-600">Comprehensive Evaluation - Industry Experience Studio Project</p>
+                    <p class="text-lg text-gray-600">Evaluating the Effectiveness of FIT5122's Delivery</p>
                 </div>
 
                 <div class="bg-white rounded-2xl shadow-2xl p-8 mb-6">
                     <div class="bg-amber-50 border-l-4 border-amber-500 p-4 mb-6 rounded">
                         <p class="text-amber-700 text-sm">
-                            <strong>Ethics Notice:</strong> MUHREC Approved Project 2024-12345-FIT5122. All responses are anonymous and confidential.
+                            <strong>Ethics Notice:</strong> MUHREC Approved Project 2025-12345-FIT5122. All responses are anonymous and confidential.
                         </p>
                     </div>
 
@@ -417,7 +417,7 @@ async def survey_form():
                                 <div>
                                     <label class="block text-lg font-medium text-gray-800 mb-2">Research Participation Consent</label>
                                     <p class="text-gray-600 text-sm">
-                                        I understand that this survey is conducted under Monash University ethics approval (MUHREC 2024-12345-FIT5122). 
+                                        I understand that this survey is conducted under Monash University ethics approval (MUHREC 2025-12345-FIT5122). 
                                         I consent to my anonymous responses being used for educational research purposes and unit improvement initiatives. 
                                         I acknowledge that I can withdraw my participation at any time without penalty.
                                     </p>
@@ -566,6 +566,44 @@ async def submit_survey(
         """
         return HTMLResponse(content=error_html, status_code=500)
 
+
+@app.get("/thank-you", response_class=HTMLResponse)
+async def thank_you():
+    return """
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Thank You - FIT5122 Survey</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+        <style> body { font-family: 'Noto Sans JP', sans-serif; } </style>
+    </head>
+    <body class="bg-gradient-to-br from-green-50 to-blue-50 min-h-screen flex items-center justify-center">
+        <div class="max-w-md w-full bg-white rounded-2xl shadow-2xl p-8 text-center">
+            <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg class="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+            </div>
+            <h2 class="text-3xl font-bold text-gray-800 mb-4">Thank You!</h2>
+            <p class="text-lg text-gray-600 mb-6">
+                Your valuable feedback has been successfully recorded and will contribute to enhancing 
+                the FIT5122 Industry Experience Studio Project for future students.
+            </p>
+            <div class="bg-green-50 border-l-4 border-green-500 p-4 mb-6 text-left rounded">
+                <p class="text-green-700 text-sm">
+                    <strong>Research Contribution:</strong> Your response supports ongoing educational research 
+                    and quality improvement at Monash University's Faculty of Information Technology.
+                </p>
+            </div>
+            <a href="/" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg transition duration-300 inline-block">
+                Return to Survey Home
+            </a>
+        </div>
+    </body>
+    </html>
+    """
+
 @app.get("/health")
 async def health(db: SessionLocal = Depends(get_db)):
     try:
@@ -584,3 +622,6 @@ if __name__ == "__main__":
     import uvicorn
     port = int(os.getenv("PORT", 8000))
     uvicorn.run(app, host="0.0.0.0", port=port)
+
+
+
